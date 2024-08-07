@@ -112,11 +112,11 @@ def interact_with_urls(driver, wait, urls, folder_name, email):
             if "invisible" not in subscribe_button_shape.get_attribute("class"):
                 subscribe_button = wait.until(EC.element_to_be_clickable((By.XPATH, '//ytd-subscribe-button-renderer//button')))
                 subscribe_button.click()
-                save_to_report(folder_name, email, "Subscribe berhasil")
+                save_to_report(folder_name, email, "Subscribe berhasil \n")
             else:
-                save_to_report(folder_name, email, "Sudah subscribe")
+                save_to_report(folder_name, email, "Sudah subscribe \n")
         except Exception as e:
-            save_to_report(folder_name, email, f"Gagal subscribe button: {e}")
+            save_to_report(folder_name, email, f"Gagal subscribe button: {e} \n")
 
         time.sleep(5)
 
