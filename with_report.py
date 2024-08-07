@@ -9,7 +9,7 @@ from datetime import datetime
 
 def create_report_folder():
     now = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-    folder_name = f"laporan/{now}"
+    folder_name = f"laporan/like-subscribe-watch/{now}"
     os.makedirs(folder_name, exist_ok=True)
     print(f"Folder laporan dibuat: {folder_name}")
     return folder_name
