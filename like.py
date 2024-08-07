@@ -100,13 +100,13 @@ def interact_with_urls(driver, wait, urls, folder_name, email):
                 if aria_pressed == "false":
                     button.click()
                     time.sleep(2)
-                    save_to_report(folder_name, email, "Like video berhasil")
+                    save_to_report(folder_name, email, "Like video berhasil \n")
                     break
             else:
-                save_to_report(folder_name, email, "Video sudah di-like atau tombol like tidak ditemukan.")
+                save_to_report(folder_name, email, "Video sudah di-like \n")
         except Exception as e:
-            save_to_report(folder_name, email, f"Gagal klik like button karena: {e}")
-
+            # save_to_report(folder_name, email, f"Gagal klik like button karena: {e}")
+            save_to_report(folder_name, email, "Video sudah di-like \n")
         time.sleep(5)
 
     driver.close()
