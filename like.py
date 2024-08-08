@@ -16,7 +16,7 @@ def create_report_folder():
 
 def save_to_report(folder_name, email, message):
     report_file = os.path.join(folder_name, f"{email}.txt")
-    with open(report_file, 'a') as file:
+    with open(report_file, 'a', encoding='utf-8') as file:
         file.write(f"{datetime.now().strftime('%H:%M:%S')} - {message}\n")
     print(f"{datetime.now().strftime('%H:%M:%S')} - {email}: {message}")
 
