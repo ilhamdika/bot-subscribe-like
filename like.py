@@ -40,7 +40,7 @@ def login(email, password, folder_name):
         return None, None
 
     try:
-        wait.until(EC.visibility_of_element_located((By.XPATH, '//*[contains(text(), "Incorrect password")]')))
+        wait.until(EC.visibility_of_element_located((By.XPATH, '//*[contains(text(), "Wrong password")]')))
         save_to_report(folder_name, email, "Password salah \n")
         driver.close()
         return None, None
