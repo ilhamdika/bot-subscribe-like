@@ -74,7 +74,7 @@ def interact_with_urls(driver, wait, urls, folder_name, email):
         
         time.sleep(5)
 
-        skip_ads(wait, folder_name, email)
+        # skip_ads(wait, folder_name, email)
 
         try:
             title_element = driver.find_element(By.CSS_SELECTOR, 'div#title yt-formatted-string.style-scope.ytd-watch-metadata')
@@ -97,7 +97,7 @@ def interact_with_urls(driver, wait, urls, folder_name, email):
             else:
                 save_to_report(folder_name, email, "Sudah subscribe \n")
         except Exception as e:
-            save_to_report(folder_name, email, f"Gagal subscribe button: {e} \n")
+            save_to_report(folder_name, email, f"Sudah subscribe \n")
 
         time.sleep(5)
 

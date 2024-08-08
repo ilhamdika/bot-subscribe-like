@@ -74,7 +74,7 @@ def interact_with_urls(driver, wait, urls, folder_name, email):
         
         time.sleep(5)
 
-        skip_ads(wait, folder_name, email)
+        # skip_ads(wait, folder_name, email)
 
         try:
             title_element = driver.find_element(By.CSS_SELECTOR, 'div#title yt-formatted-string.style-scope.ytd-watch-metadata')
