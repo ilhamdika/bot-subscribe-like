@@ -35,13 +35,13 @@ def login(email, password, folder_name):
         wait.until(EC.element_to_be_clickable((By.ID, 'passwordNext'))).click()
         time.sleep(5)
     except Exception as e:
-        save_to_report(folder_name, email, f"Login gagal: tidak ditemukan")
+        save_to_report(folder_name, email, f"Login gagal: tidak ditemukan \n")
         driver.close()
         return None, None
 
     try:
         wait.until(EC.visibility_of_element_located((By.XPATH, '//*[contains(text(), "Incorrect password")]')))
-        save_to_report(folder_name, email, "Password salah")
+        save_to_report(folder_name, email, "Password salah \n")
         driver.close()
         return None, None
     except:
@@ -49,10 +49,10 @@ def login(email, password, folder_name):
 
     try:
         wait.until(EC.visibility_of_element_located((By.ID, 'logo-icon')))
-        save_to_report(folder_name, email, "Login sukses")
+        save_to_report(folder_name, email, "Login sukses \n")
         return driver, wait
     except Exception as e:
-        save_to_report(folder_name, email, f"Login gagal: waktu tunggu melebihi batas")
+        save_to_report(folder_name, email, f"Login gagal: waktu tunggu melebihi batas \n")
         driver.close()
         return None, None
 
@@ -90,7 +90,7 @@ def interact_with_urls(driver, wait, urls, folder_name, email):
 
         save_to_report(folder_name, email, "Sedang menonton...")
 
-        time.sleep(5)
+        time.sleep(120)
 
         save_to_report(folder_name, email, "Menonton selesai \n")
 
