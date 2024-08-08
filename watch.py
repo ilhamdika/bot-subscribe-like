@@ -16,7 +16,7 @@ def create_report_folder():
 
 def save_to_report(folder_name, email, message):
     report_file = os.path.join(folder_name, f"{email}.txt")
-    with open(report_file, 'a') as file:
+    with open(report_file, 'a', encoding='utf-8') as file:
         file.write(f"{datetime.now().strftime('%H:%M:%S')} - {message}\n")
     print(f"{datetime.now().strftime('%H:%M:%S')} - {email}: {message}")
 
@@ -77,7 +77,7 @@ def interact_with_urls(driver, wait, urls, folder_name, email):
         skip_ads(wait, folder_name, email)
 
         try:
-            title_element = driver.find_element(By.CSS_SELECTOR, 'yt-formatted-string.style-scope.ytd-watch-metadata')
+            title_element = driver.find_element(By.CSS_SELECTOR, 'div#title yt-formatted-string.style-scope.ytd-watch-metadata')
             save_to_report(folder_name, email, f"Judul video: {title_element.text}")
         except Exception as e:
             save_to_report(folder_name, email, f"Judul video tidak ditemukan: {e}")
