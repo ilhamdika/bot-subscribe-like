@@ -1,3 +1,5 @@
 /laporan/*
 
 !laporan/.gitignore
+
+.env
