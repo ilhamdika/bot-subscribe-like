@@ -44,8 +44,13 @@ set /p confirm=Masukkan pilihan (y/n):
 
 if "%confirm%"=="y" (
     echo.
+    echo Get data dulu ya ....
+    python api.py
+    
+    echo.
     echo Menjalankan %script%...
     python %script%
+    
     echo.
     echo Proses selesai.
     echo.
@@ -62,4 +67,3 @@ if "%confirm%"=="y" (
     echo.
     goto confirm
 )
-
