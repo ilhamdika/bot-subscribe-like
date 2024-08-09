@@ -16,6 +16,7 @@ Skrip ini mengotomatisasi proses login ke YouTube menggunakan akun Google dan me
 
 2. Unduh eksekusi ChromeDriver yang sesuai dengan sistem operasi Anda dari situs resmi: [Unduh](https://developer.chrome.com/docs/chromedriver/downloads)
 3. Tempatkan eksekusi ChromeDriver di PATH sistem Anda atau tentukan jalur di dalam kode.
+4. pip install python-dotenv
 
 ## Penggunaan
 
