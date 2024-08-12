@@ -48,7 +48,7 @@ def login(email, password, folder_name):
         pass
 
     try:
-        wait.until(EC.visibility_of_element_located((By.ID, 'logo-icon')))
+        wait.until(EC.visibility_of_element_located((By.ID, 'avatar-btn')))
         save_to_report(folder_name, email, "Login sukses \n")
         return driver, wait
     except Exception as e:
