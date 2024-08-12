@@ -5,8 +5,10 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-api_url_user = os.getenv('API_URL_USER')
-api_url_link = os.getenv('API_URL_LINK')
+base_url = os.getenv('BASE_URL')
+
+api_url_user = base_url + '/api/getEmail'
+api_url_link = base_url + '/api/getUrl'
 api_key = os.getenv('API_KEY')
 
 post_data = {
