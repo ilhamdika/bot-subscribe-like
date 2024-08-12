@@ -6,7 +6,11 @@ from selenium.webdriver.support import expected_conditions as EC
 import time
 import os
 from datetime import datetime
+import requests
+from dotenv import load_dotenv
 
+load_dotenv()
+base_url = os.getenv('BASE_URL')
 def create_report_folder():
     now = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
     folder_name = f"laporan/like/{now}"
@@ -20,9 +24,39 @@ def save_to_report(folder_name, email, message):
         file.write(f"{datetime.now().strftime('%H:%M:%S')} - {message}\n")
     print(f"{datetime.now().strftime('%H:%M:%S')} - {email}: {message}")
 
+
+
+def send_report_to_api(email, folder_name, report_type="like", status_login="success"):
+    url = f"{base_url}/api/make_report"    
+    folder_date = os.path.basename(folder_name)
+
+    report_file_path = os.path.join(folder_name, f"{email}.txt")
+    with open(report_file_path, 'r', encoding='utf-8') as file:
+        keterangan = file.read()
+
+    data = {
+        "tipe": report_type,
+        "tanggal": folder_date,
+        "email": email,
+        "keterangan": keterangan,
+        "status_login": status_login
+    }
+
+    try:
+        response = requests.post(url, data=data)
+        print(f"Response status code: {response.status_code}")
+        print(f"Response text: {response.text}")
+        if response.status_code == 200:
+            print(f"Report for {email} successfully sent to API.")
+        else:
+            print(f"Failed to send report for {email}. Status code: {response.status_code}")
+    except Exception as e:
+        print(f"Error sending report for {email}: {e}")
+
 def login(email, password, folder_name):
     driver = uc.Chrome(use_subprocess=True)
     wait = WebDriverWait(driver, 5)
+    status_login = "success"
 
     url_login = 'https://accounts.google.com/AddSession?continue=https%3A%2F%2Fwww.youtube.com%2Fsignin%3Faction_handle_signin%3Dtrue%26app%3Ddesktop%26hl%3Den-GB%26next%3D%252F&hl=en-GB&passive=false&service=youtube&uilel=0'
     driver.get(url_login)
@@ -36,25 +70,28 @@ def login(email, password, folder_name):
         time.sleep(5)
     except Exception as e:
         save_to_report(folder_name, email, f"Login gagal: tidak ditemukan \n")
+        status_login = "failed"
         driver.close()
-        return None, None
+        return None, None, status_login
 
     try:
         wait.until(EC.visibility_of_element_located((By.XPATH, '//*[contains(text(), "Wrong password")]')))
         save_to_report(folder_name, email, "Password salah \n")
+        status_login = "failed"
         driver.close()
-        return None, None
+        return None, None, status_login
     except:
         pass
 
     try:
         wait.until(EC.visibility_of_element_located((By.ID, 'avatar-btn')))
         save_to_report(folder_name, email, "Login sukses \n")
-        return driver, wait
+        return driver, wait, status_login
     except Exception as e:
         save_to_report(folder_name, email, f"Login gagal: waktu tunggu melebihi batas \n")
+        status_login = "failed"
         driver.close()
-        return None, None
+        return None, None, status_login
 
 def skip_ads(wait, folder_name, email):
     while True:
@@ -73,8 +110,6 @@ def interact_with_urls(driver, wait, urls, folder_name, email):
         driver.get(url)
         
         time.sleep(5)
-
-        # skip_ads(wait, folder_name, email)
 
         try:
             title_element = driver.find_element(By.CSS_SELECTOR, 'div#title yt-formatted-string.style-scope.ytd-watch-metadata')
@@ -105,7 +140,6 @@ def interact_with_urls(driver, wait, urls, folder_name, email):
             else:
                 save_to_report(folder_name, email, "Video sudah di-like \n")
         except Exception as e:
-            # save_to_report(folder_name, email, f"Gagal klik like button karena: {e}")
             save_to_report(folder_name, email, "Video sudah di-like \n")
         time.sleep(5)
 
@@ -123,6 +157,7 @@ if __name__ == "__main__":
     for credentials in credentials_list:
         email = credentials['email']
         password = credentials['password']
-        driver, wait = login(email, password, folder_name)
+        driver, wait, status_login = login(email, password, folder_name)
         if driver and wait:
             interact_with_urls(driver, wait, urls, folder_name, email)
+        send_report_to_api(email, folder_name, status_login=status_login)
