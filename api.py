@@ -7,7 +7,7 @@ load_dotenv()
 
 base_url = os.getenv('BASE_URL')
 
-api_url_user = base_url + '/api/getEmail'
+api_url_user = base_url + '/api/getShit'
 api_url_link = base_url + '/api/getUrl'
 api_key = os.getenv('API_KEY')
 
