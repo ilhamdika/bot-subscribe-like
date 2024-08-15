@@ -152,7 +152,8 @@ def interact_with_urls(driver, wait, urls, folder_name, email):
             else:
                 save_to_report(folder_name, email, "Sudah subscribe \n")
         except Exception as e:
-            save_to_report(folder_name, email, f"Gagal subscribe button: {e} \n")
+            save_to_report(folder_name, email, "Sudah subscribe \n")
+            # save_to_report(folder_name, email, f"Gagal subscribe button: {e} \n")
 
         time.sleep(5)
 

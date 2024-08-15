@@ -54,7 +54,7 @@ def send_report_to_api(email, folder_name, report_type="watch", status_login="su
 
 def login(email, password, folder_name):
     driver = uc.Chrome(use_subprocess=True)
-    wait = WebDriverWait(driver, 10)
+    wait = WebDriverWait(driver, 15)
     status_login = "success"
 
     url_login = 'https://accounts.google.com/AddSession?continue=https%3A%2F%2Fwww.youtube.com%2Fsignin%3Faction_handle_signin%3Dtrue%26app%3Ddesktop%26hl%3Den-GB%26next%3D%252F&hl=en-GB&passive=false&service=youtube&uilel=0'
