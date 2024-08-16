@@ -45,7 +45,16 @@ set /p confirm=Masukkan pilihan (y/n):
 if "%confirm%"=="y" (
     echo.
     echo Get data dulu ya ....
+    
+    rem
     python api.py
+    if %errorlevel% neq 0 (
+        echo.
+        echo [ERROR] Password salah atau request gagal. Tidak dapat melanjutkan.
+        echo.
+        pause
+        goto menu
+    )
     
     echo.
     echo Menjalankan %script%...
@@ -54,6 +63,7 @@ if "%confirm%"=="y" (
     echo.
     echo Proses selesai.
     echo.
+    pause
     exit
 ) else if "%confirm%"=="n" (
     echo.
