@@ -25,8 +25,8 @@ def save_to_report(folder_name, email, message):
         file.write(f"{datetime.now().strftime('%H:%M:%S')} - {message}\n")
     print(f"{datetime.now().strftime('%H:%M:%S')} - {email}: {message}")
 
-def send_report_to_api(email, folder_name, report_type="watch", status_login="success"):
-    url = f"{base_url}/api/make_report"
+def send_report_to_api(email, username, folder_name, url, report_type="watch", status_login="success"):
+    api_url = f"{base_url}/api/make_report"
     folder_date = os.path.basename(folder_name)
 
     report_file_path = os.path.join(folder_name, f"{email}.txt")
@@ -37,12 +37,14 @@ def send_report_to_api(email, folder_name, report_type="watch", status_login="su
         "tipe": report_type,
         "tanggal": folder_date,
         "email": email,
+        "username": username,
         "keterangan": keterangan,
-        "status_login": status_login
+        "status_login": status_login,
+        "url": url
     }
 
     try:
-        response = requests.post(url, data=data)
+        response = requests.post(api_url, data=data)
         print(f"Response status code: {response.status_code}")
         print(f"Response text: {response.text}")
         if response.status_code == 200:
@@ -106,6 +108,7 @@ def skip_ads(wait, folder_name, email):
 def interact_with_urls(driver, wait, urls, folder_name, email):
     for url_dict in urls:
         url = url_dict['url']
+        username = url_dict.get('username')
         driver.get(url)
         
         time.sleep(5)
@@ -124,9 +127,10 @@ def interact_with_urls(driver, wait, urls, folder_name, email):
         except Exception as e:
             save_to_report(folder_name, email, f"Gagal menemukan elemen channel: {e}")
 
+        send_report_to_api(email, username, folder_name, url, status_login=status_login)
         save_to_report(folder_name, email, "Sedang menonton...")
 
-        time.sleep(120)
+        time.sleep(5)
 
         save_to_report(folder_name, email, "Menonton selesai \n")
 
@@ -147,4 +151,8 @@ if __name__ == "__main__":
         driver, wait, status_login = login(email, password, folder_name)
         if driver and wait:
             interact_with_urls(driver, wait, urls, folder_name, email)
-        send_report_to_api(email, folder_name, status_login=status_login)
+        else:
+            for url_dict in urls:
+                url = url_dict['url']
+                username = url_dict.get('username')
+                send_report_to_api(email, username, folder_name, url, status_login="failed")

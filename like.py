@@ -1,16 +1,17 @@
+import requests
 import json
+import os
+from dotenv import load_dotenv
+from datetime import datetime
 import undetected_chromedriver as uc
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 import time
-import os
-from datetime import datetime
-import requests
-from dotenv import load_dotenv
 
 load_dotenv()
 base_url = os.getenv('BASE_URL')
+
 def create_report_folder():
     now = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
     folder_name = f"laporan/like/{now}"
@@ -24,10 +25,8 @@ def save_to_report(folder_name, email, message):
         file.write(f"{datetime.now().strftime('%H:%M:%S')} - {message}\n")
     print(f"{datetime.now().strftime('%H:%M:%S')} - {email}: {message}")
 
-
-
-def send_report_to_api(email, folder_name, report_type="like", status_login="success"):
-    url = f"{base_url}/api/make_report"    
+def send_report_to_api(email, username, folder_name, url, report_type="like", status_login="success"):
+    api_url = f"{base_url}/api/make_report"
     folder_date = os.path.basename(folder_name)
 
     report_file_path = os.path.join(folder_name, f"{email}.txt")
@@ -38,12 +37,14 @@ def send_report_to_api(email, folder_name, report_type="like", status_login="suc
         "tipe": report_type,
         "tanggal": folder_date,
         "email": email,
+        "username": username,
         "keterangan": keterangan,
-        "status_login": status_login
+        "status_login": status_login,
+        "url": url
     }
 
     try:
-        response = requests.post(url, data=data)
+        response = requests.post(api_url, data=data)
         print(f"Response status code: {response.status_code}")
         print(f"Response text: {response.text}")
         if response.status_code == 200:
@@ -107,6 +108,7 @@ def skip_ads(wait, folder_name, email):
 def interact_with_urls(driver, wait, urls, folder_name, email):
     for url_dict in urls:
         url = url_dict['url']
+        username = url_dict.get('username')
         driver.get(url)
         
         time.sleep(5)
@@ -140,8 +142,9 @@ def interact_with_urls(driver, wait, urls, folder_name, email):
             else:
                 save_to_report(folder_name, email, "Video sudah di-like \n")
         except Exception as e:
-            save_to_report(folder_name, email, "Video sudah di-like \n")
-        time.sleep(5)
+            save_to_report(folder_name, email, "Gagal melakukan like video \n")
+        
+        send_report_to_api(email, username, folder_name, url, status_login=status_login)
 
     driver.close()
 
@@ -160,4 +163,8 @@ if __name__ == "__main__":
         driver, wait, status_login = login(email, password, folder_name)
         if driver and wait:
             interact_with_urls(driver, wait, urls, folder_name, email)
-        send_report_to_api(email, folder_name, status_login=status_login)
+        else:
+            for url_dict in urls:
+                url = url_dict['url']
+                username = url_dict.get('username')
+                send_report_to_api(email, username, folder_name, url, status_login="failed")
