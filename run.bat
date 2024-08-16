@@ -54,7 +54,7 @@ if "%confirm%"=="y" (
     echo.
     echo Proses selesai.
     echo.
-    goto menu
+    exit
 ) else if "%confirm%"=="n" (
     echo.
     echo Anda membatalkan pilihan. Kembali ke menu...
